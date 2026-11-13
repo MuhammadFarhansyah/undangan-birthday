@@ -209,27 +209,28 @@ function startCounter() {
 }
 
 // --- GENERATOR ISI HATI & KEJUJURAN ---
+// --- GENERATOR ISI HATI & KEJUJURAN ---
 const honestyMessages = [
-    "Karena sedingin apapun sikap kamu, aku tetep pengen jadi orang pertama yang nenangin kamu pas lagi panik di kantor.",
-    "Karena walau kamu sering ngambek, denger kamu cerita random soal mati lampu dan kucing lahiran aja udah bikin aku lega.",
-    "Karena aku udah bayangin masa depan kita, sampai kepikiran excited bahas ngasih nama anak kita Laith atau Sea.",
-    "Karena nyari kerjaan emang susah dan bikin aku hopeless, tapi nyari perempuan kaya kamu jauh lebih mustahil buat aku.",
-    "Karena aku tau di balik sikap cuek dan jutek kamu, kamu cuma butuh diyakinin kalau aku ga akan pergi kemana-mana.",
-    "Karena setiap kali kita berantem hebat, rasa takut kehilangan kamu selalu jauh lebih besar dari ego aku sendiri.",
-    "Ingat ga pas kamu bilang mau nemenin aku dari titik nadir sampai zenit? Kata-kata itu yang bikin aku gak boleh nyerah.",
-    "Maafin aku ya kalau kemarin-kemarin egois masalah waktu, padahal aku cuma mau denger suara kamu pas lagi di kantor.",
-    "Aku bangga banget sama kamu yang tahan banting ngerjain SPK, surat tugas, dan laporan seabrek walau laper dan kesepian.",
-    "Meskipun kita sempet bahas soal target nikah di umur 26 dan ngitungin biaya cicilan rumah, aku pengen kita wujudin itu bareng.",
-    "Makasih ya udah selalu ingetin aku buat sholat dhuha dan baca doa penenang hati setiap kali aku ngerasa down.",
-    "Aku inget banget pas kamu bilang 'nikahin aku dong' sambil sedih kesepian, sumpah di situ aku makin bulatin tekad buat cepet mapan.",
-    "Nggak apa-apa kemarin sempat nolak maganghub di SCBD karena bentrok, aku yakin rezeki buat kita bakal datang di waktu terbaik.",
-    "Maaf ya kemarin sempat nyuruh kamu bawa motor sendiri pas ujan/macet, padahal aslinya aku pengen banget ngejemput kamu biar gentle.",
-    "Meskipun kita suka berantem gara-gara hal sepele, ujung-ujungnya kita tetep balik lagi karena kita emang sebucin itu.",
-    "Aku bakal berusaha lebih keras buat nurutin mau kamu beli celana barrel Uniqlo atau jajan seblak kesukaan kamu.",
-    "Kamu gak perlu takut ngerasa berjuang sendirian lagi, karena aku selalu ada buat nge-backup kamu dari belakang.",
-    "Nanti pas hari ultah kamu, aku bakal pastiin kita jalan-jalan santai di Jakarta dan kamu bisa senyum lepas tanpa beban.",
-    "Buat semua chat panjang pas kita adu argumen, itu bukti kalau kita berdua sama-sama peduli dan gak mau saling kehilangan.",
-    "You are my 'Upah'. Apapun badai yang lewat di hubungan kita, tujuannya tetep satu: bahagia sama kamu selamanya."
+    "Karena seberapa jutek atau ngambeknya kamu, aku tetep pengen jadi orang pertama yang ngajak ngobrol pas kamu capek.",
+    "Karena denger kamu cerita random soal hal-hal kecil di luar sana aja udah bikin aku betah.",
+    "Karena aku udah sering mikirin rencana-rencana ke depan kita, dari hal-hal kecil sampai serius.",
+    "Karena nyari kerjaan emang susah banget, tapi nyari cewek seloyal dan sepeduli kamu itu jauh lebih susah.",
+    "Karena di balik sikap cuek kamu, aku tahu kamu cuma butuh diyakinin kalau aku gak bakal ke mana-mana.",
+    "Karena tiap kita lagi adu argumen atau berantem, rasa takut kehilangan kamu selalu jauh lebih besar dari ego aku.",
+    "Karena aku inget banget omongan kamu pas mau nemenin dari bawah, dan itu yang bikin aku gak mau nyerah.",
+    "Karena aku minta maaf kalau kadang masih kurang peka soal waktu atau hal-hal sepele, padahal aslinya cuma pengen bareng kamu.",
+    "Karena kamu itu tahan banting banget ngadepin kerjaan dan urusan ribet sendirian. Aku beneran bangga.",
+    "Karena kita udah sempet bahas target-target masa depan, dan aku pengen wujudin itu semua bareng kamu.",
+    "Makasih udah selalu ngingetin hal-hal baik setiap kali aku lagi down atau capek.",
+    "Karena pas kamu bilang pengen serius sambil sedih, di situ aku makin buatin tekad buat cepet mapan.",
+    "Karena walau kemarin sempat ada rencana atau hal yang batal, aku yakin jalannya bakal diatur yang terbaik buat kita.",
+    "Karena maaf kalau kadang repot atau jalan sendiri, aslinya pengen selalu nemenin kamu terus.",
+    "Because pada akhirnya, seberapa sering pun kita debat, ujung-ujungnya kita emang sebucin itu satu sama lain.",
+    "Karena aku bakal usaha terus buat nurutin hal-hal kecil yang bikin kamu seneng, kayak jajan atau barang incaran kamu.",
+    "Karena kamu gak perlu ngerasa berjuang sendirian lagi, ada aku yang bakal selalu back-up kamu.",
+    "Karena pas hari ultah kamu nanti, aku bakal pastikan kita jalan-jalan santai tanpa ada beban pikiran.",
+    "Karena chat panjang dan debat kita itu bukti kalau kita berdua sama-sama peduli dan gak mau kehilangan.",
+    "You are my 'Upah'. Apapun badai yang lewat, tujuannya tetep satu: senang-senang dan bahagia bareng kamu selamanya."
 ];
 
 let availableMessages = [...honestyMessages]; 
