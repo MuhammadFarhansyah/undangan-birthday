@@ -1,0 +1,183 @@
+:root {
+    --bg-color: #fcf8f2;
+    --text-dark: #4a3f35;
+    --accent: #8b7355;
+    --blob-1: #e2d1bb;
+    --blob-2: #c6b299;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-dark);
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+    margin: 0; padding: 0;
+}
+
+h1, h2, h3, .font-serif {
+    font-family: 'Playfair Display', serif;
+}
+
+/* Background Animasi Cewek Bumi */
+.bg-blobs {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    overflow: hidden;
+    z-index: 0;
+    pointer-events: none;
+    filter: blur(40px);
+}
+.blob {
+    position: absolute;
+    border-radius: 50%;
+    animation: float 15s infinite ease-in-out alternate;
+    opacity: 0.5;
+}
+.blob:nth-child(1) {
+    width: 300px; height: 300px; background: var(--blob-1);
+    top: -10%; left: -10%;
+}
+.blob:nth-child(2) {
+    width: 350px; height: 350px; background: var(--blob-2);
+    bottom: -10%; right: -10%; animation-delay: -5s;
+}
+.blob:nth-child(3) {
+    width: 250px; height: 250px; background: #d4c4b4;
+    top: 40%; left: 60%; animation-duration: 20s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1) rotate(0deg); border-radius: 50%; }
+    33% { transform: translate(30px, -50px) scale(1.1) rotate(120deg); border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+    66% { transform: translate(-20px, 20px) scale(0.9) rotate(240deg); border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+    100% { transform: translate(0, 0) scale(1) rotate(360deg); border-radius: 50%; }
+}
+
+/* Glassmorphism Mewah */
+.glass-bg {
+    background: rgba(252, 248, 242, 0.6);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+}
+.glass-card {
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.7);
+    box-shadow: 0 8px 32px rgba(139, 115, 85, 0.1);
+    border-radius: 1.5rem;
+}
+
+/* Polaroid Galeri */
+.polaroid {
+    position: absolute;
+    background: white;
+    padding: 8px 8px 25px 8px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 4px;
+    width: 150px;
+    transition: all 0.4s ease-in-out;
+    cursor: pointer;
+}
+.polaroid:hover {
+    transform: scale(1.1) rotate(0deg) !important;
+    z-index: 50;
+}
+
+.polaroid.enlarged {
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) scale(1.8) rotate(0deg) !important;
+    z-index: 100 !important;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+}
+.polaroid img {
+    width: 100%; height: 130px; object-fit: cover;
+}
+.polaroid p {
+    text-align: center; font-family: 'Playfair Display', serif;
+    font-size: 10px; margin-top: 8px; color: #4a3f35;
+}
+
+/* Flip Card */
+.flip-card { perspective: 1000px; cursor: pointer; }
+.flip-card-inner {
+    position: relative; width: 100%; height: 100%;
+    transition: transform 0.6s; transform-style: preserve-3d;
+}
+.flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+.flip-card-front, .flip-card-back {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 1rem;
+}
+.flip-card-back {
+    transform: rotateY(180deg); background: var(--accent); color: white;
+}
+
+#btn-lari { position: absolute; transition: top 0.2s ease, left 0.2s ease; }
+
+::-webkit-scrollbar { width: 0px; background: transparent; }
+
+/* Animasi Partikel Melayang */
+.particle {
+    position: absolute;
+    bottom: -20px;
+    background-color: var(--accent);
+    border-radius: 50%;
+    opacity: 0;
+    pointer-events: none;
+    animation: floatUp infinite ease-in-out;
+}
+
+@keyframes floatUp {
+    0% { transform: translateY(0) translateX(0) scale(0); opacity: 0; }
+    20% { opacity: 0.3; }
+    50% { transform: translateY(-50vh) translateX(20px) scale(1); opacity: 0.5; }
+    80% { opacity: 0.3; }
+    100% { transform: translateY(-110vh) translateX(-20px) scale(0.5); opacity: 0; }
+}
+
+/* Animasi Denyut untuk Tombol */
+@keyframes pulse-beat {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(74, 63, 53, 0.4);
+    }
+    50% {
+        transform: scale(1.03);
+        box-shadow: 0 0 0 10px rgba(74, 63, 53, 0);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(74, 63, 53, 0);
+    }
+}
+
+.btn-pulse {
+    animation: pulse-beat 2s infinite ease-in-out;
+}
+
+/* Animasi Pop-Up Mulus untuk Card Utama */
+@keyframes popUpSmooth {
+    0% { transform: scale(0.85); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+.pop-up-anim {
+    animation: popUpSmooth 0.9s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Animasi Bergetar / Bergentar Berhenti untuk Tombol Perhatian */
+@keyframes attentionPulseShake {
+    0%, 70%, 100% { transform: scale(1) rotate(0deg); }
+    75% { transform: scale(1.04) rotate(-1.5deg); }
+    80% { transform: scale(1.04) rotate(1.5deg); }
+    85% { transform: scale(1.03) rotate(-1deg); }
+    90% { transform: scale(1.02) rotate(1deg); }
+    95% { transform: scale(1) rotate(0deg); }
+}
+
+.attention-btn {
+    animation: attentionPulseShake 3.5s infinite ease-in-out;
+}

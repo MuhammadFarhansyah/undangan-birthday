@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Undangan Spesial - Yayu & Farhan</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- AOS Animation untuk Scroll -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+
+    <!-- Confetti Party Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <!-- API Spotify untuk deteksi Play/Pause -->
+    <script src="https://open.spotify.com/embed/iframe-api/v1" async></script>
+    
+    <!-- Link CSS Lu -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+    </style>
+</head>
+<body>
+
+    <!-- Animasi Background Blobs -->
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <!-- Music -->
+    <audio id="bg-music" loop>
+        <source src="lagu.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- Modal Desktop -->
+    <div id="modal" class="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/40 opacity-0 pointer-events-none transition-opacity duration-200">
+        <div class="glass-card p-6 max-w-sm w-full text-center">
+            <i class="fa-solid fa-mobile-screen-button text-3xl text-[#8b7355] mb-3"></i>
+            <h3 class="font-serif text-lg font-bold mb-2">Aku saranin buka di HP sih sayang!</h3>
+            <p class="text-xs mb-4 opacity-80">Biar pengalaman scrollnya pas, tapi gapapa deh lanjuut... 🤎</p>
+            <button onclick="closeModal()" class="w-full py-2.5 bg-[#8b7355] text-white rounded-xl text-sm font-medium">Next</button>
+        </div>
+    </div>
+
+    <!-- LAYER AWAL: GATEKEEPER -->
+    <div id="gate-screen" class="fixed inset-0 z-50 flex flex-col justify-center items-center p-6 transition-opacity duration-500 glass-bg">
+        <!-- Step 1: Device -->
+        <div id="step-device" class="glass-card w-full max-w-sm p-6 text-center">
+            <h1 class="font-serif text-3xl font-bold text-[#4a3f35] mb-2">Halo Upah ✨</h1>
+            <p class="text-sm opacity-80 mb-6">Pilih perangkat yang lagi kamu pake sekarang.</p>
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="passDevice()" class="flex flex-col items-center p-4 rounded-xl bg-white/60 hover:bg-white transition shadow-sm border border-white/50 active:scale-95">
+                    <i class="fa-solid fa-mobile-screen text-3xl text-[#8b7355] mb-2"></i>
+                    <span class="font-medium text-xs">Mobile / HP</span>
+                </button>
+                <button onclick="openModal()" class="flex flex-col items-center p-4 rounded-xl bg-white/60 hover:bg-white transition shadow-sm border border-white/50 active:scale-95">
+                    <i class="fa-solid fa-desktop text-3xl text-[#8b7355] mb-2"></i>
+                    <span class="font-medium text-xs">Desktop / PC</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Step 2: Pertanyaan Ganteng -->
+        <div id="step-question" class="glass-card w-full max-w-sm p-6 text-center relative min-h-[380px] flex flex-col justify-center hidden">
+            <div class="mb-4">
+                <span class="inline-block px-3 py-1 bg-[#8b7355]/20 rounded-full text-[10px] font-bold tracking-wider mb-3 uppercase text-[#8b7355]">Verifikasi Keamanan</span>
+                <h2 class="font-serif text-2xl font-bold text-[#4a3f35] mb-2">Sebelum masuk...</h2>
+                <p class="text-sm">Menurut kamu, Farhan ganteng nggak sih? 🤨</p>
+            </div>
+            <div id="btn-container" class="relative w-full h-[150px] mt-4 bg-white/30 rounded-2xl border border-white/50 overflow-hidden">
+                <button onclick="unlockApp()" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20 w-44 py-3 bg-[#8b7355] text-white rounded-full text-xs font-bold shadow-lg active:scale-95 transition-all">
+                    Ganteng Banget! 😍
+                </button>
+                <button id="btn-lari" class="absolute z-10 px-4 py-2 bg-white text-[#8b7355] border border-[#8b7355] rounded-full text-xs font-medium shadow-sm transition-all duration-200" style="top: 20px; left: 20px;">
+                    Enggak 😛
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN APP: STORY SCROLL -->
+    <div id="main-app" class="relative w-full hidden scroll-smooth">
+        <div class="w-full max-w-lg mx-auto px-4 sm:px-6 pb-28 space-y-24"> 
+
+            <!-- SECTION 1: HERO & TIMER -->
+            <section class="min-h-[85vh] flex flex-col justify-center items-center pt-10" data-aos="fade-up" data-aos-duration="1000">
+                <div id="hero-card" class="glass-card p-6 text-center w-full mb-6 mt-4 opacity-0 transform scale-90">
+                    <p class="text-[10px] uppercase tracking-[0.2em] font-bold text-[#8b7355] mb-2">Welcome to your day</p>
+                    <h1 class="font-serif text-4xl text-[#4a3f35] mb-2 leading-tight">Happy<br>Birthday<br><span class="italic text-[#8b7355]">Sayangku!</span></h1>
+                    <p class="text-xs opacity-80">Terima kasih udah selalu ada bareng aku🤎</p>
+                </div>
+
+                <div class="glass-card p-6 text-center w-full mb-8">
+                    <h3 class="font-serif text-lg font-bold mb-4 text-[#8b7355]"><i class="fa-regular fa-clock mr-2"></i>Ciee bentar lagii ultaah...</h3>
+                    <div class="grid grid-cols-4 gap-2 text-center" id="time-counter">
+                        <div class="bg-white/50 p-2.5 rounded-lg"><span id="c-days" class="block font-bold text-xl text-[#4a3f35]">0</span><span class="text-[9px]">Hari</span></div>
+                        <div class="bg-white/50 p-2.5 rounded-lg"><span id="c-hours" class="block font-bold text-xl text-[#4a3f35]">0</span><span class="text-[9px]">Jam</span></div>
+                        <div class="bg-white/50 p-2.5 rounded-lg"><span id="c-minutes" class="block font-bold text-xl text-[#4a3f35]">0</span><span class="text-[9px]">Menit</span></div>
+                        <div class="bg-white/50 p-2.5 rounded-lg"><span id="c-seconds" class="block font-bold text-xl text-[#4a3f35]">0</span><span class="text-[9px]">Detik</span></div>
+                    </div>
+                </div>
+
+                <div class="animate-bounce text-[#8b7355] text-xl opacity-60">
+                    <i class="fa-solid fa-chevron-down"></i>
+                </div>
+            </section>
+
+            <!-- SECTION 1.5: PENGANTAR (STICKY SCROLL NGEREM HALUS) -->
+            <div class="h-[160vh] relative w-full"> 
+                <section class="sticky top-0 h-screen flex flex-col justify-center items-center w-full" data-aos="fade-up" data-aos-duration="1500" data-aos-easing="ease-out-cubic">
+                    <div class="glass-card p-8 text-center w-full shadow-lg relative overflow-hidden">
+                        <div class="absolute -top-10 -left-10 w-28 h-28 bg-[#8b7355]/15 rounded-full blur-xl pointer-events-none"></div>
+                        
+                        <i class="fa-solid fa-map-location-dot text-3xl text-[#8b7355] mb-4"></i>
+                        <h2 class="font-serif text-2xl font-bold mb-3 text-[#4a3f35]">A Little Journey ✨</h2>
+                        <p class="text-xs opacity-85 leading-relaxed text-[#4a3f35] mb-4 text-justify">
+                            Halo sayang! Di hari spesial kamu ini, aku bikin sesuatu yang beda. Sebelum kita jalan kencan, yuk kita <i>flashback</i> perjalanan kita. 
+                        </p>
+                        <p class="text-xs opacity-85 leading-relaxed text-[#4a3f35] mb-5 text-justify">
+                            Mulai dari lagu favorit kita, galeri foto, isi kepalaku yang lagi jujur banget, sampai bocoran rute birthday kamu hari minggu udah aku siapin semua di sini.
+                        </p>
+                        <p class="text-[10px] font-bold text-[#8b7355] italic tracking-wide uppercase animate-pulse">
+                            Scroll ke bawah pelan-pelan yaa 🤎
+                        </p>
+                    </div>
+                </section>
+            </div>
+
+            <!-- SECTION 2: OUR ANTHEM (3 LAGU PILIHAN LU) -->
+            <section data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-6">
+                    <h2 class="font-serif text-2xl font-bold">Our Anthem</h2>
+                    <p class="text-xs opacity-70">Deretan lagu perjalanan kita 🤎</p>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 text-center w-full shadow-lg relative overflow-hidden flex flex-col justify-between" style="min-height: 550px;">
+                    <div class="absolute -top-10 -right-10 w-28 h-28 bg-[#8b7355]/10 rounded-full blur-xl pointer-events-none"></div>
+                    <p class="text-xs opacity-75 mb-5 leading-relaxed">Like a sunset after the rain you're so colorful, Like the ocean so complexly beautiful</p>
+
+                    <div style="display: none;">
+                        <div id="spotify-embed"></div> 
+                    </div>
+
+                    <!-- Lagu 1 -->
+                    <div class="w-full overflow-hidden rounded-xl shadow-sm mb-3">
+                        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/1dGr1c8CrMLDpV6mPbImSI?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+
+                    <!-- Lagu 2 -->
+                    <div class="w-full overflow-hidden rounded-xl shadow-sm mb-3">
+                        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/6L68DyIsn6SqEN9rStOXb9?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+
+                    <!-- Lagu 3 -->
+                    <div class="w-full overflow-hidden rounded-xl shadow-sm mb-2">
+                        <iframe style="border-radius:12px" src="https://open.spotify.com/embed/track/557XVqKgnYAxvvyczr2zDg?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allowfullscreen="" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+                    </div>
+
+                    <p class="text-[10px] italic opacity-60 mt-3">"My heart's been borrowed and yours has been blue. All's well that ends well to end up with you."</p>
+                </div>
+            </section>
+
+            <!-- SECTION 3: GALERI KITA -->
+            <section data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-6">
+                    <h2 class="font-serif text-2xl font-bold">Galeri Kita</h2>
+                    <p class="text-xs opacity-70">Secuil memori lucu kita bareng-bareng</p>
+                </div>
+
+                <div class="relative w-full h-[700px] overflow-hidden rounded-2xl glass-card">
+                    <div class="polaroid" style="top: 20px; left: 8%; transform: rotate(-5deg);"><img src="wa (1).jpeg"><p>4 Oktober 2026</p></div>
+                    <div class="polaroid" style="top: 80px; left: 45%; transform: rotate(7deg);"><img src="wa (2).jpeg"><p>19 September 2026</p></div>
+                    <div class="polaroid" style="top: 170px; left: 5%; transform: rotate(4deg);"><img src="wa (3).jpeg"><p>5 September 2026</p></div>
+                    <div class="polaroid" style="top: 230px; left: 48%; transform: rotate(-4deg);"><img src="wa (4).jpeg"><p>22 Juni 2026</p></div>
+                    <div class="polaroid" style="top: 320px; left: 10%; transform: rotate(-6deg);"><img src="wa (5).jpeg"><p>6 April 2026</p></div>
+                    <div class="polaroid" style="top: 380px; left: 42%; transform: rotate(5deg);"><img src="wa (6).jpeg"><p>6 April 2026</p></div>
+                    <div class="polaroid" style="top: 470px; left: 6%; transform: rotate(3deg);"><img src="wa (7).jpeg"><p>23 Januari 2026</p></div>
+                    <div class="polaroid" style="top: 520px; left: 45%; transform: rotate(-5deg);"><img src="wa (8).jpeg"><p>31 Desember 2025</p></div>
+                </div>
+            </section>
+
+            <!-- SECTION 4: TOPLES ALASAN -->
+            <section data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-6">
+                    <h2 class="font-serif text-2xl font-bold">Kenapa Aku Masih Di Sini?</h2>
+                    <p class="text-xs opacity-70">Isi hati dan kejujuran buat kamu</p>
+                </div>
+
+                <div class="glass-card p-6 sm:p-8 text-center relative overflow-hidden w-full shadow-lg">
+                    <div class="absolute -top-10 -left-10 w-28 h-28 bg-[#8b7355]/10 rounded-full blur-xl pointer-events-none"></div>
+
+                    <div class="mb-6 border-b border-[#8b7355]/20 pb-5 text-left">
+                        <p class="text-xs opacity-85 leading-relaxed text-[#4a3f35] text-justify">
+                            Belakangan ini gila banget kan? Kita banyak berantem, nangis, capek sama ego masing-masing, sampai kamu ngerasa kesepian dan aku ngerasa hancur.
+                        </p>
+                        <p class="text-xs opacity-85 leading-relaxed text-[#4a3f35] text-justify mt-2">
+                            Buka kartu di bawah buat tau isi kepala dan alasan kenapa aku gak akan pernah nyerah sama kamu. 🤎
+                        </p>
+                    </div>
+
+                    <div id="honesty-text" class="min-h-[110px] flex items-center justify-center italic text-sm text-[#4a3f35] font-medium bg-[#f4eee1] p-5 rounded-xl mb-6 transition-opacity duration-300 shadow-inner border border-[#e2d1bb]">
+                        (Klik tombol di bawah buat baca isi kepalaku)
+                    </div>
+
+                    <button onclick="generateHonesty()" class="w-full py-3.5 bg-[#4a3f35] text-white rounded-xl font-medium text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-2 btn-pulse">
+                        <i class="fa-solid fa-envelope-open-text"></i> Baca Isi Hatiku
+                    </button>
+                </div>
+            </section>
+
+            <!-- SECTION 5: RUTE VESPA -->
+            <section data-aos="fade-up" data-aos-duration="1000">
+                <div class="text-center mb-6">
+                    <h2 class="font-serif text-2xl font-bold">Perjalanan Hari Minggu</h2>
+                    <p class="text-xs opacity-70">Bantu gas motornya biar rutenya kebuka!</p>
+                </div>
+
+                <div class="glass-card p-6 w-full text-center shadow-lg">
+                    <div id="dynamic-vespa-container" class="relative w-full pl-6 mb-6 text-left overflow-hidden transition-all duration-700 ease-in-out" style="height: 70px;">
+                        <div class="absolute left-10 top-0 bottom-0 w-1 bg-[#d6c3a5] rounded-full transition-all duration-700"></div>
+                        <div id="vespa-motor" class="absolute left-[26px] w-8 h-8 bg-white shadow-md border border-[#e2d1bb] rounded-full flex items-center justify-center text-base z-20 transition-all duration-700 ease-out" style="top: 0px;">🛵</div>
+
+                        <div class="vespa-stop absolute left-16 top-[20px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 13.00–14.00</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="OTW1.jpeg" alt="OTW Carpenter" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">OTW dari Rumah Nova ke Carpenter’s Bakery 🛵</p>
+                            </div>
+                        </div>
+
+                        <div class="vespa-stop absolute left-16 top-[170px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 14.00–16.30</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="carpenter.jpeg" alt="Carpenter Bakery" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">Birthday Brunch at Carpenter’s Bakery ☕</p>
+                            </div>
+                        </div>
+
+                        <div class="vespa-stop absolute left-16 top-[320px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 16.30–16.45</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="OTW2.jpeg" alt="OTW Photobooth" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">OTW ke Naomi yura Agency (Photobooth) 📸</p>
+                            </div>
+                        </div>
+
+                        <div class="vespa-stop absolute left-16 top-[470px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 16.45–17.45</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="Naomi.jpeg" alt="Photobooth" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">Photobooth di Naomi yura Agency ✨</p>
+                            </div>
+                        </div>
+
+                        <div class="vespa-stop absolute left-16 top-[620px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 17.45–19.45</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="JAJAN.jpeg" alt="Jajanan" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">Jalan-jalan keliling dan cari jajanan enak 🍢</p>
+                            </div>
+                        </div>
+
+                        <div class="vespa-stop absolute left-16 top-[770px] opacity-0 transform translate-x-3 transition-all duration-700 w-[72%] sm:w-72">
+                            <h4 class="font-bold text-[#8b7355] text-xs"><i class="fa-regular fa-clock mr-1"></i> 19.45–20.45</h4>
+                            <div class="flex items-center gap-2.5 mt-1 bg-white/70 p-2.5 rounded-lg shadow-sm border border-white">
+                                <img src="rumah.jpeg" alt="Rumah Upah" class="w-20 h-20 object-cover rounded-md flex-shrink-0 shadow-sm">
+                                <p class="text-[10px] leading-tight font-medium">OTW sampai Rumah Upah dengan selamat 🌙</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="btn-gas-dinamis" onclick="gasVespaDinamis()" class="w-full py-3 bg-[#8b7355] text-white rounded-xl font-bold shadow-md text-xs active:scale-95 transition-all btn-pulse">Gas Terus! <i class="fa-solid fa-motorcycle ml-1"></i></button>
+                </div>
+            </section>
+
+            <!-- SECTION 6: OUTFIT BUILDER & TOMBOL LANJUT KE FORM -->
+            <section data-aos="fade-up" data-aos-duration="1000" class="pb-10">
+                <div class="text-center mb-6">
+                    <h2 class="font-serif text-2xl font-bold">Outfit & Menu Pilihan</h2>
+                    <p class="text-xs opacity-70">Pilih gaya dan makanan favorit kamu hari ini</p>
+                </div>
+
+                <!-- OUTFIT BUILDER INTERAKTIF -->
+                <div class="glass-card p-5 text-center mb-6 w-full space-y-4">
+                    <h2 class="font-serif text-lg font-bold mb-1">Pilih Outfit Farhan 🤎</h2>
+                    <p class="text-[10px] opacity-75 mb-3">Tentukan baju, bawahan, dan alas kaki yang mau Farhan pakai</p>
+
+                    <!-- 1. Atasan -->
+                    <div class="text-left">
+                        <label class="block text-[11px] font-bold text-[#8b7355] mb-1">1. Atasan (Baju):</label>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <button type="button" onclick="selectOutfit('atasan', 'T-Shirt', this)" class="outfit-atasan border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">👕 T-Shirt</button>
+                            <button type="button" onclick="selectOutfit('atasan', 'Kemeja/Shirt', this)" class="outfit-atasan border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">👔 Kemeja / Shirt</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] opacity-70 mr-1">Warna:</span>
+                            <button type="button" onclick="selectColor('atasanWarna', 'Hitam', this)" class="color-atasanWarna w-5 h-5 rounded-full bg-black border border-white/50 shadow-sm transition transform hover:scale-110" title="Hitam"></button>
+                            <button type="button" onclick="selectColor('atasanWarna', 'Putih', this)" class="color-atasanWarna w-5 h-5 rounded-full bg-white border border-[#8b7355]/40 shadow-sm transition transform hover:scale-110" title="Putih"></button>
+                            <button type="button" onclick="selectColor('atasanWarna', 'Cokelat Bumi', this)" class="color-atasanWarna w-5 h-5 rounded-full bg-[#8b7355] border border-white/50 shadow-sm transition transform hover:scale-110" title="Cokelat Bumi"></button>
+                            <button type="button" onclick="selectColor('atasanWarna', 'Cream/Beige', this)" class="color-atasanWarna w-5 h-5 rounded-full bg-[#e2d1bb] border border-[#8b7355]/40 shadow-sm transition transform hover:scale-110" title="Cream"></button>
+                        </div>
+                    </div>
+
+                    <!-- 2. Bawahan -->
+                    <div class="text-left pt-2 border-t border-[#8b7355]/20">
+                        <label class="block text-[11px] font-bold text-[#8b7355] mb-1">2. Bawahan (Celana):</label>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <button type="button" onclick="selectOutfit('bawahan', 'Celana Panjang', this)" class="outfit-bawahan border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">👖 Celana Panjang</button>
+                            <button type="button" onclick="selectOutfit('bawahan', 'Celana Pendek', this)" class="outfit-bawahan border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">🩳 Celana Pendek</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] opacity-70 mr-1">Warna:</span>
+                            <button type="button" onclick="selectColor('bawahanWarna', 'Hitam', this)" class="color-bawahanWarna w-5 h-5 rounded-full bg-black border border-white/50 shadow-sm transition transform hover:scale-110" title="Hitam"></button>
+                            <button type="button" onclick="selectColor('bawahanWarna', 'Putih', this)" class="color-bawahanWarna w-5 h-5 rounded-full bg-white border border-[#8b7355]/40 shadow-sm transition transform hover:scale-110" title="Putih"></button>
+                            <button type="button" onclick="selectColor('bawahanWarna', 'Jeans/Denim', this)" class="color-bawahanWarna w-5 h-5 rounded-full bg-[#4a6b82] border border-white/50 shadow-sm transition transform hover:scale-110" title="Jeans"></button>
+                            <button type="button" onclick="selectColor('bawahanWarna', 'Cokelat/Cream', this)" class="color-bawahanWarna w-5 h-5 rounded-full bg-[#c6b299] border border-[#8b7355]/40 shadow-sm transition transform hover:scale-110" title="Cokelat/Cream"></button>
+                        </div>
+                    </div>
+
+                    <!-- 3. Alas Kaki -->
+                    <div class="text-left pt-2 border-t border-[#8b7355]/20">
+                        <label class="block text-[11px] font-bold text-[#8b7355] mb-1">3. Alas Kaki (Sepatu / Sandal):</label>
+                        <div class="grid grid-cols-2 gap-2 mb-2">
+                            <button type="button" onclick="selectOutfit('sepatu', 'Sepatu', this)" class="outfit-sepatu border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">👟 Sepatu</button>
+                            <button type="button" onclick="selectOutfit('sepatu', 'Sandal', this)" class="outfit-sepatu border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] transition">🩴 Sandal</button>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <span class="text-[9px] opacity-70 mr-1">Warna:</span>
+                            <button type="button" onclick="selectColor('sepatuWarna', 'Hitam', this)" class="color-sepatuWarna w-5 h-5 rounded-full bg-black border border-white/50 shadow-sm transition transform hover:scale-110" title="Hitam"></button>
+                            <button type="button" onclick="selectColor('sepatuWarna', 'Putih', this)" class="color-sepatuWarna w-5 h-5 rounded-full bg-white border border-[#8b7355]/40 shadow-sm transition transform hover:scale-110" title="Putih"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PILIHAN MAKANAN & TOMBOL LANJUT KE FORM -->
+                <div class="glass-card p-5 text-center w-full">
+                    <h2 class="font-serif text-lg font-bold mb-3">Upah mau makan apa?</h2>
+                    <div class="grid grid-cols-3 gap-2 mb-6">
+                        <button type="button" class="food-btn border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] hover:bg-[#8b7355] hover:text-white transition" onclick="selectFood('Pasta', this)">🍝 Pasta</button>
+                        <button type="button" class="food-btn border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] hover:bg-[#8b7355] hover:text-white transition" onclick="selectFood('Daging', this)">🥩 Daging</button>
+                        <button type="button" class="food-btn border border-[#8b7355] rounded-lg py-2 text-[10px] font-medium text-[#8b7355] hover:bg-[#8b7355] hover:text-white transition" onclick="selectFood('Jajanan', this)">🍢 Jajanan</button>
+                    </div>
+
+                    <h2 class="font-serif text-xl mb-2 text-[#8b7355]">Udah siap jalan-jalan?</h2>
+                    
+                    <button onclick="pindahKeHalamanForm()" class="w-full py-4 bg-[#4a3f35] text-white rounded-xl font-bold shadow-lg text-sm active:scale-95 transition-all btn-pulse">
+                        Siaappp! 🤎
+                    </button>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- SCRIPT BAWAAN -->
+    <script src="script.js"></script>
+</body>
+</html>

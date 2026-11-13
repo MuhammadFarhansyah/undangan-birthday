@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+    <title>Kotak Pesan Rahasia - Yayu & Farhan</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Link CSS Utama -->
+    <link rel="stylesheet" href="style.css">
+    
+    <style>
+        html { scroll-behavior: smooth; }
+        
+        /* --- CSS KHUSUS ANIMASI AMPLOP --- */
+        .envelope-container {
+            position: relative;
+            width: 280px;
+            height: 180px;
+            background: #d6c3a5;
+            border-radius: 8px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        }
+        
+        .flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-top: 100px solid #c6b299;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            transform-origin: top;
+            transition: transform 0.6s ease-in-out;
+            z-index: 4;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+        
+        .flap.open {
+            transform: rotateX(180deg);
+        }
+        
+        .letter {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            background: #fdfbf7;
+            border-radius: 6px;
+            z-index: 2;
+            transition: transform 0.8s ease-in-out 0.4s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            padding: 15px;
+        }
+        
+        .letter.up {
+            transform: translateY(-50px);
+        }
+        
+        .front-bottom {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-bottom: 90px solid #a68c6d;
+            border-left: 140px solid transparent;
+            border-right: 140px solid transparent;
+            z-index: 3;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+        }
+        .front-left {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 0;
+            height: 0;
+            border-left: 140px solid #ba9e7d;
+            border-top: 90px solid transparent;
+            border-bottom: 90px solid transparent;
+            z-index: 3;
+            border-bottom-left-radius: 8px;
+        }
+        .front-right {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 0;
+            height: 0;
+            border-right: 140px solid #ba9e7d;
+            border-top: 90px solid transparent;
+            border-bottom: 90px solid transparent;
+            z-index: 3;
+            border-bottom-right-radius: 8px;
+        }
+
+        .overlay-drop {
+            transform: translateY(100vh);
+            opacity: 0;
+        }
+        
+        /* --- POSISI & ROTASI FINAL --- */
+        .pop-char {
+            position: fixed;
+            z-index: 105; 
+            pointer-events: none; 
+            transition: transform 1s cubic-bezier(0.34, 1.56, 0.64, 1); 
+        }
+        
+        #img-abang {
+            bottom: -15px; 
+            left: 50%; 
+            transform: translateX(-50%) translateY(150%) rotate(0deg); 
+            width: 140px; 
+        }
+        #img-abang.muncul {
+            transform: translateX(-50%) translateY(0) rotate(0deg); 
+        }
+        
+        #img-nova {
+            bottom: 300px; 
+            right: -15px; 
+            width: 95px; 
+            transform: translateY(0) translateX(150px) rotate(-35deg); 
+            opacity: 0;
+            transition: transform 0.8s ease-in-out, opacity 0.5s ease-in-out;
+        }
+        #img-nova.muncul {
+            transform: translateY(0) translateX(0) rotate(-35deg); 
+            opacity: 1;
+        }
+    </style>
+</head>
+<body class="bg-[#f4eee1] flex items-center justify-center min-h-screen p-4">
+
+    <!-- Music Estafet -->
+    <audio id="bg-music" loop>
+        <source src="lagu.mp3" type="audio/mp3">
+    </audio>
+
+    <!-- LAYER AMPLOP -->
+    <div id="envelope-overlay" class="fixed inset-0 z-[100] bg-[#f4eee1] flex flex-col items-center justify-center cursor-pointer transition-all duration-1000 ease-in-out" onclick="bukaAmplop()">
+        
+        <p class="text-xs font-bold tracking-widest text-[#8b7355] mb-10 animate-pulse uppercase">Ketuk Di Mana Aja 🤎</p>
+        
+        <div class="envelope-container">
+            <div id="flap" class="flap"></div>
+            <div id="letter" class="letter">
+                <div>
+                    <h3 class="font-serif text-[#4a3f35] font-bold text-sm mb-1">Pesan Rahasia</h3>
+                    <p class="text-[9px] opacity-70">Dari Upah ✨</p>
+                </div>
+            </div>
+            <div class="front-left"></div>
+            <div class="front-right"></div>
+            <div class="front-bottom"></div>
+        </div>
+
+    </div>
+
+    <!-- Karakter Pop-up -->
+    <img src="Abang.png" id="img-abang" class="pop-char" alt="Abang">
+    <img src="Nova.png" id="img-nova" class="pop-char" alt="Nova">
+
+    <!-- Background Blobs -->
+    <div class="bg-blobs">
+        <div class="blob"></div>
+        <div class="blob"></div>
+        <div class="blob"></div>
+    </div>
+
+    <!-- Container Utama Halaman Form -->
+   <div class="w-full max-w-[98vw] mx-auto relative z-10 px-1 py-4">
+        <div class="glass-card p-3 sm:p-6 text-center shadow-lg relative overflow-hidden space-y-4">
+            <div class="absolute -top-10 -right-10 w-28 h-28 bg-[#8b7355]/10 rounded-full blur-xl pointer-events-none"></div>
+            
+            <div>
+                <h2 class="font-serif text-2xl font-bold mb-1 text-[#4a3f35]">Kotak Pesan Rahasia 🤎</h2>
+                <p class="text-xs opacity-75 text-[#4a3f35]">Tulis kesan atau pesan anonim kamu di bawah ini ya!</p>
+            </div>
+
+            <!-- Embed Google Form -->
+            <div class="w-full overflow-hidden rounded-xl bg-white/40 p-2 border border-white/60 shadow-inner">
+                <iframe src="https://docs.google.com/forms/d/e/1FAIpQLSfaT_lsIpNr2AVVGfA7J0En4Rt-gZPfFv8EwEvVve3bKk-WcQ/viewform?embedded=true" width="100%" height="450" frameborder="0" marginheight="0" marginwidth="0" style="background: transparent;">Memuat…</iframe>
+            </div>
+
+            <!-- Tombol Next ke WhatsApp -->
+            <div class="pt-2 border-t border-[#8b7355]/20">
+                <p class="text-[11px] opacity-80 mb-3 font-medium text-[#4a3f35]">Udah selesai nulis dan kirim form di atas? Yuk lanjut!</p>
+                
+                <a href="#" onclick="kirimKeWA(event)" class="inline-block w-full py-3.5 bg-[#4a3f35] text-white rounded-xl font-bold shadow-lg text-xs active:scale-95 transition-all attention-btn">
+                    Next 🤎
+                </a>
+            </div>
+
+            <!-- Tombol Kembali -->
+            <div>
+                <a href="index.html" class="text-xs opacity-70 hover:opacity-100 text-[#8b7355] underline transition">
+                    <i class="fa-solid fa-arrow-left mr-1"></i> Kembali ke Beranda
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Script -->
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            setTimeout(() => {
+                const popAbang = document.getElementById('img-abang');
+                const popNova = document.getElementById('img-nova');
+                if(popAbang) popAbang.classList.add('muncul');
+                if(popNova) popNova.classList.add('muncul');
+            }, 300);
+        });
+
+        let amplopSudahDibuka = false;
+
+        function bukaAmplop() {
+            if (amplopSudahDibuka) return;
+            amplopSudahDibuka = true;
+
+            const params = new URLSearchParams(window.location.search);
+            const detikLagu = params.get('lagu');
+            let bgMusic = document.getElementById('bg-music');
+            if (bgMusic) {
+                if (detikLagu) bgMusic.currentTime = parseFloat(detikLagu);
+                bgMusic.play().catch(e => console.log("Audio terblokir:", e));
+            }
+
+            const popAbang = document.getElementById('img-abang');
+            const popNova = document.getElementById('img-nova');
+            if(popAbang) popAbang.classList.remove('muncul');
+            if(popNova) popNova.classList.remove('muncul');
+
+            document.getElementById('flap').classList.add('open');
+            document.getElementById('letter').classList.add('up');
+
+            setTimeout(() => {
+                const overlay = document.getElementById('envelope-overlay');
+                overlay.classList.add('overlay-drop');
+                
+                setTimeout(() => {
+                    overlay.classList.add('hidden');
+                }, 1000);
+            }, 1200); 
+        }
+
+        function formatWarna(namaWarna) {
+            if (!namaWarna) return 'Bebas';
+            const w = namaWarna.toLowerCase();
+            let emoji = '';
+            if (w.includes('cokelat') || w.includes('coklat')) emoji = ' 🍫';
+            else if (w.includes('hitam')) emoji = ' 🖤';
+            else if (w.includes('putih')) emoji = ' 🤍';
+            else if (w.includes('merah')) emoji = ' ❤️';
+            else if (w.includes('biru')) emoji = ' 💙';
+            else if (w.includes('hijau')) emoji = ' 💚';
+            else if (w.includes('kuning')) emoji = ' 💛';
+            else if (w.includes('ungu')) emoji = ' 💜';
+            else if (w.includes('pink') || w.includes('merah muda')) emoji = ' 🩷';
+            else if (w.includes('abu') || w.includes('grey')) emoji = ' 🩶';
+            else if (w.includes('oranye') || w.includes('jingga')) emoji = ' 🧡';
+            else emoji = ' ✨';
+            
+            return namaWarna + emoji;
+        }
+
+        function kirimKeWA(event) {
+            event.preventDefault();
+            
+            const params = new URLSearchParams(window.location.search);
+            const atasan = params.get('atasan') || 'Bebas';
+            const atasanWarna = formatWarna(params.get('atasanWarna'));
+            const bawahan = params.get('bawahan') || 'Bebas';
+            const bawahanWarna = formatWarna(params.get('bawahanWarna'));
+            const sepatu = params.get('sepatu') || 'Bebas';
+            const sepatuWarna = formatWarna(params.get('sepatuWarna'));
+            const makanan = params.get('makanan') || 'Belum dipilih';
+
+            let pesanWA = `Makasiihh banyak yaa sayangkuu, cintakuuu, gantengkuu, udah mau ngusahain dan nyiapin semuanya buat birthday aku. Aku udah baca undangannya dan udah isi pesannya juga di Google Form yaa. Hehehe, makasih udah mau bikin sesuatu yang spesial buat aku. Aku bener-bener appreciate semua usaha kamu. Love you so much, sayanggg! ❤️🥹. 🤎%0A%0A*Pilihan Outfit Kamu Nanti:*%0A- Atasan: ${atasan} (${atasanWarna})%0A- Bawahan: ${bawahan} (${bawahanWarna})%0A- Alas Kaki: ${sepatu} (${sepatuWarna})%0A- Makanan: ${makanan} ✨`;
+            
+            let urlWA = `https://wa.me/6285942074615?text=${pesanWA}`;
+            window.location.href = urlWA;
+        }
+    </script>
+</body>
+</html>
